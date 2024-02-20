@@ -20,20 +20,12 @@ passport.use(
                     return done(null, false, { message: 'User already exists' });
                 }
 
-                bcrypt.genSalt(10, function(err, salt) {
-                    const user = new User(email, password, salt)
+                bcrypt.hash(password, 10, function(err, hash) {
+                    const user = new User(email, hash)
 
-                    bcrypt.hash(password, salt, function(err, hash) {
-                        bcrypt.genSalt(10, function(err, salt) {
-                            bcrypt.hash(hash, salt, function(err, hash) {
-                                user.password = hash
+                    User.insert(user)
 
-                                User.insert(user)
-
-                                return done(null, user);
-                            });
-                        });
-                    });
+                    return done(null, user);
                 });
             } catch (error) {
                 done(error);
@@ -57,15 +49,13 @@ passport.use(
                     return done(null, false, { message: 'User not found' });
                 }
 
-                bcrypt.hash(password, user.salt, async function (err, hash) {
-                    const validate = await User.validatePassword(hash, user.password)
+                const validate = await User.validatePassword(password, user.password)
 
-                    if (!validate) {
-                        return done(null, false, {message: 'Wrong password'});
-                    }
+                if (!validate) {
+                    return done(null, false, {message: 'Wrong password'});
+                }
 
-                    return done(null, user);
-                });
+                return done(null, user);
             } catch (error) {
                 return done(error);
             }

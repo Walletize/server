@@ -4,14 +4,13 @@ export default class User {
     id?: number;
     email: string;
     password: string;
-    salt: string;
+
     static connection = require('../../knexfile')['development'];
     static database = require('knex')(this.connection);
 
-    constructor(email: string, password: string, salt: string) {
+    constructor(email: string, password: string) {
         this.email = email;
         this.password = password;
-        this.salt = salt;
     }
 
     static async validatePassword(password: string, hash: string) {

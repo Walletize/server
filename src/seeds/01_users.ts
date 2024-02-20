@@ -1,4 +1,5 @@
 import { Knex } from "knex";
+import bcrypt from "bcrypt";
 
 export async function seed(knex: Knex): Promise<void> {
     // Deletes ALL existing entries
@@ -6,8 +7,6 @@ export async function seed(knex: Knex): Promise<void> {
 
     // Inserts seed entries
     await knex("users").insert([
-        {id: 1, email: 'a', password: 'b'},
-        {id: 2, email: 'a', password: 'b'},
-        {id: 3, email: 'a', password: 'b'},
+        {id: 1, email: 'a', password: bcrypt.hashSync('b', 10)},
     ]);
 };
