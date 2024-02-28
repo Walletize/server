@@ -1,0 +1,100 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// model Asset {
+//   id              Int           @id @default(autoincrement())
+//   name            String
+//   initial_balance BigInt
+//   currency_id     Int
+//   user_id         Int
+//   currencies      Currency      @relation(fields: [currency_id], references: [id])
+//   users           User          @relation(fields: [user_id], references: [id])
+//   transactions    Transaction[]
+// }
+//
+// model Currency {
+//   id     Int     @id @default(autoincrement())
+//   name   String
+//   code   String
+//   symbol String
+//   assets Asset[]
+// }
+//
+// model TransactionCategories {
+//   id       Int     @id @default(autoincrement())
+//   email    String?
+//   password String?
+//   salt     String?
+// }
+//
+// model Transaction {
+//   id          Int    @id @default(autoincrement())
+//   title       String
+//   description String
+//   amount      String
+//   asset_id    Int
+//   type        String
+//   assets      Asset  @relation(fields: [asset_id], references: [id])
+// }
+
+model User {
+  id           Int     @id @default(autoincrement())
+  email        String  @unique
+  password     String
+  salt         String
+  key          String
+  refreshToken String? @map("refresh_token")
+  assets       Asset[]
+
+  @@map("users")
+}
+
+model Currency {
+  id     Int     @id @default(autoincrement())
+  name   String
+  code   String
+  symbol String
+  assets Asset[]
+
+  @@map("currencies")
+}
+
+model Asset {
+  id             Int           @id @default(autoincrement())
+  name           String
+  initialBalance String        @map("initial_balance")
+  currencyId     Int           @map("currency_id")
+  userId         Int           @map("user_id")
+  currency       Currency      @relation(fields: [currencyId], references: [id])
+  users          User          @relation(fields: [userId], references: [id])
+  transactions   Transaction[]
+
+  @@map("assets")
+}
+
+// model TransactionCategory {
+//   id       Int     @id @default(autoincrement())
+//   email    String?
+//   password String?
+//   salt     String?
+//
+//   @@map("transaction_categories")
+// }
+
+model Transaction {
+  id          Int    @id @default(autoincrement())
+  title       String
+  description String
+  amount      String
+  assetId     Int    @map("assetId")
+  type        String
+  asset       Asset  @relation(fields: [assetId], references: [id])
+
+  @@map("transactions")
+}

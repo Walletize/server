@@ -1,29 +1,47 @@
-import passport from 'passport';
+import passport, {use} from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
-import User from "../models/User";
 import bcrypt from "bcrypt";
 import 'dotenv/config'
+import {prisma} from "../app";
+import jwt from "jsonwebtoken";
+import {JwtToken} from "../helpers/types";
 
 passport.use(
     'signup',
     new LocalStrategy(
         {
             usernameField: 'email',
-            passwordField: 'password'
+            passwordField: 'password',
+            passReqToCallback: true
         },
-        async (email, password, done) => {
+        async (req, email, password, done) => {
             try {
-                const isUserExist = await User.checkDuplicateUser(email);
+                const body = req.body
+                const salt = body.salt
+                const key = body.key
 
-                if (isUserExist) {
+                let userCount = await prisma.user.count(
+                    {
+                        where: {
+                            email: email
+                        }
+                    }
+                )
+
+                if (userCount > 0) {
                     return done(null, false, { message: 'User already exists' });
                 }
 
-                bcrypt.hash(password, 10, function(err, hash) {
-                    const user = new User(email, hash)
-
-                    User.insert(user)
+                bcrypt.hash(password, 10, async function (err, hash) {
+                    const user = await prisma.user.create({
+                        data: {
+                            email: email,
+                            password: hash,
+                            salt: salt,
+                            key: key,
+                        }
+                    })
 
                     return done(null, user);
                 });
@@ -43,15 +61,17 @@ passport.use(
         },
         async (email, password, done) => {
             try {
-                const user= await User.findOne(email);
+                const user = await prisma.user.findUnique({
+                    where: {
+                        email: email,
+                    },
+                })
 
                 if (!user) {
                     return done(null, false, { message: 'User not found' });
                 }
 
-                const validate = await User.validatePassword(password, user.password)
-
-                if (!validate) {
+                if (!await bcrypt.compare(password, user.password)) {
                     return done(null, false, {message: 'Wrong password'});
                 }
 
@@ -70,10 +90,12 @@ passport.use(
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken()
         },
         async (token, done) => {
-            try {
+            const tokenType = token.tokenType
+
+            if (tokenType == 'access') {
                 return done(null, token.user);
-            } catch (error) {
-                done(error);
+            } else {
+                return done(null, false);
             }
         }
     )
