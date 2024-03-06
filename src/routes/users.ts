@@ -15,9 +15,16 @@ router.get(
             },
         })
 
-        return res.json({
-            user: user
-        })
+        if (user) {
+            return res.status(200).json({
+                user: {
+                    id: user.id,
+                    email: user.email,
+                    salt: user.salt,
+                    key: user.key,
+                }
+            })
+        }
     }
 );
 
