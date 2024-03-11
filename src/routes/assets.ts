@@ -1,6 +1,7 @@
 import express from 'express';
 import {prisma} from "../app";
 import { JwtUser } from "../helpers/types";
+
 const router = express.Router();
 
 router.get('/', async (req, res) => {

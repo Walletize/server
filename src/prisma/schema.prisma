@@ -89,12 +89,16 @@ model Asset {
 
 model Transaction {
   id          Int    @id @default(autoincrement())
-  title       String
   description String
   amount      String
+  type        TransactionType
   assetId     Int    @map("assetId")
-  type        String
   asset       Asset  @relation(fields: [assetId], references: [id])
 
   @@map("transactions")
+}
+
+enum TransactionType {
+  expense
+  income
 }
