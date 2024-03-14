@@ -1,12 +1,35 @@
 import express from 'express';
 import {prisma} from "../app";
 import { JwtUser } from "../helpers/types";
-import { TransactionType } from "@prisma/client";
 
 const router = express.Router();
 
 router.get('/', async (req, res) => {
+    try {
+        const jwtUser = req.user as JwtUser
 
+        const transactions = await prisma.transaction.findMany({
+            where: {
+                asset: {
+                    users: {
+                        id: jwtUser.id
+                    }
+                }
+            }
+        });
+
+        res.status(200).json({
+            success: true,
+            transactions: transactions
+        })
+    } catch (e) {
+        console.error(e)
+
+        res.status(500).json({
+            success: false,
+            message: 'Create transaction failed.'
+        })
+    }
 });
 
 router.post('/', async (req, res) => {
@@ -20,6 +43,7 @@ router.post('/', async (req, res) => {
                 amount: body.amount,
                 type: body.type,
                 assetId: body.assetId,
+                date: body.date,
             }
         })
 
