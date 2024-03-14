@@ -44,23 +44,27 @@ datasource db {
 // }
 
 model User {
-  id           Int     @id @default(autoincrement())
-  email        String  @unique
+  id           Int      @id @default(autoincrement())
+  email        String   @unique
   password     String
   salt         String
   key          String
-  refreshToken String? @map("refresh_token")
+  refreshToken String?  @map("refresh_token")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
   assets       Asset[]
 
   @@map("users")
 }
 
 model Currency {
-  id     Int     @id @default(autoincrement())
-  name   String
-  code   String
-  symbol String
-  assets Asset[]
+  id        Int      @id @default(autoincrement())
+  name      String
+  code      String
+  symbol    String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  assets    Asset[]
 
   @@map("currencies")
 }
@@ -71,6 +75,8 @@ model Asset {
   initialBalance String        @map("initial_balance")
   currencyId     Int           @map("currency_id")
   userId         Int           @map("user_id")
+  createdAt      DateTime      @default(now()) @map("created_at")
+  updatedAt      DateTime      @updatedAt @map("updated_at")
   currency       Currency      @relation(fields: [currencyId], references: [id])
   users          User          @relation(fields: [userId], references: [id])
   transactions   Transaction[]
@@ -88,12 +94,15 @@ model Asset {
 // }
 
 model Transaction {
-  id          Int    @id @default(autoincrement())
+  id          Int             @id @default(autoincrement())
+  date        DateTime
   description String
   amount      String
   type        TransactionType
-  assetId     Int    @map("assetId")
-  asset       Asset  @relation(fields: [assetId], references: [id])
+  assetId     Int             @map("asset_id")
+  createdAt   DateTime        @default(now()) @map("created_at")
+  updatedAt   DateTime        @updatedAt @map("updated_at")
+  asset       Asset           @relation(fields: [assetId], references: [id])
 
   @@map("transactions")
 }
