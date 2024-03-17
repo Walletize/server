@@ -61,4 +61,32 @@ router.post('/', async (req, res) => {
     }
 });
 
+router.get('/categories', async (req, res) => {
+    try {
+        const jwtUser = req.user as JwtUser
+
+        const transactionCategories = await prisma.transactionCategory.findMany({
+            where: {
+                asset: {
+                    users: {
+                        id: jwtUser.id
+                    }
+                }
+            }
+        });
+
+        res.status(200).json({
+            success: true,
+            transactions: transactionCategories
+        })
+    } catch (e) {
+        console.error(e)
+
+        res.status(500).json({
+            success: false,
+            message: 'Create transaction failed.'
+        })
+    }
+});
+
 export default router;

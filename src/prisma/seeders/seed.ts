@@ -1,9 +1,11 @@
 import {PrismaClient} from '@prisma/client';
 import {seedCurrencies} from "./currency";
+import { seedTransactionCategories } from "./transactionCategory";
 const prisma = new PrismaClient()
 
 async function main() {
     await seedCurrencies(prisma)
+    await seedTransactionCategories(prisma)
 }
 
 main()

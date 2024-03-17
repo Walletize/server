@@ -44,16 +44,16 @@ datasource db {
 // }
 
 model User {
-  id           Int      @id @default(autoincrement())
-  email        String   @unique
-  password     String
-  salt         String
-  key          String
-  refreshToken String?  @map("refresh_token")
-  createdAt    DateTime @default(now()) @map("created_at")
-  updatedAt    DateTime @updatedAt @map("updated_at")
-  assets       Asset[]
-  transactionCategories       TransactionCategory[]
+  id                    Int                   @id @default(autoincrement())
+  email                 String                @unique
+  password              String
+  salt                  String
+  key                   String
+  refreshToken          String?               @map("refresh_token")
+  createdAt             DateTime              @default(now()) @map("created_at")
+  updatedAt             DateTime              @updatedAt @map("updated_at")
+  assets                Asset[]
+  transactionCategories TransactionCategory[]
 
   @@map("users")
 }
@@ -86,24 +86,27 @@ model Asset {
 }
 
 model TransactionCategory {
-  id       Int     @id @default(autoincrement())
-  name    String
-  userId         Int           @map("user_id")
-  users          User          @relation(fields: [userId], references: [id])
+  id           Int             @id @default(autoincrement())
+  name         String
+  type         TransactionType
+  userId       Int?            @map("user_id")
+  users        User?           @relation(fields: [userId], references: [id])
+  transactions Transaction[]
 
   @@map("transaction_categories")
 }
 
 model Transaction {
-  id          Int             @id @default(autoincrement())
+  id          Int                 @id @default(autoincrement())
   date        DateTime
   description String
   amount      String
-  type        TransactionType
-  assetId     Int             @map("asset_id")
-  createdAt   DateTime        @default(now()) @map("created_at")
-  updatedAt   DateTime        @updatedAt @map("updated_at")
-  asset       Asset           @relation(fields: [assetId], references: [id])
+  assetId     Int                 @map("asset_id")
+  categoryId  Int                 @map("category_id")
+  createdAt   DateTime            @default(now()) @map("created_at")
+  updatedAt   DateTime            @updatedAt @map("updated_at")
+  asset       Asset               @relation(fields: [assetId], references: [id])
+  category    TransactionCategory @relation(fields: [categoryId], references: [id])
 
   @@map("transactions")
 }
