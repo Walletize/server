@@ -9,6 +9,10 @@ router.get('/', async (req, res) => {
         const jwtUser = req.user as JwtUser
 
         const transactions = await prisma.transaction.findMany({
+            include: {
+              asset: true,
+              category: true,
+            },
             where: {
                 asset: {
                     users: {
@@ -41,7 +45,7 @@ router.post('/', async (req, res) => {
             data: {
                 description: body.description,
                 amount: body.amount,
-                type: body.type,
+                categoryId: body.categoryId,
                 assetId: body.assetId,
                 date: body.date,
             }
@@ -67,17 +71,20 @@ router.get('/categories', async (req, res) => {
 
         const transactionCategories = await prisma.transactionCategory.findMany({
             where: {
-                asset: {
-                    users: {
-                        id: jwtUser.id
-                    }
-                }
+                OR: [
+                    {
+                        userId: null,
+                    },
+                    {
+                        userId: jwtUser.id,
+                    },
+                ],
             }
         });
 
         res.status(200).json({
             success: true,
-            transactions: transactionCategories
+            transactionCategories: transactionCategories
         })
     } catch (e) {
         console.error(e)
