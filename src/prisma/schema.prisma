@@ -44,7 +44,7 @@ datasource db {
 // }
 
 model User {
-  id                    Int                   @id @default(autoincrement())
+  id                    String                @id @default(uuid())
   email                 String                @unique
   password              String
   salt                  String
@@ -59,7 +59,7 @@ model User {
 }
 
 model Currency {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(uuid())
   name      String
   code      String
   symbol    String
@@ -71,11 +71,11 @@ model Currency {
 }
 
 model Asset {
-  id             Int           @id @default(autoincrement())
+  id             String        @id @default(uuid())
   name           String
   initialBalance String        @map("initial_balance")
-  currencyId     Int           @map("currency_id")
-  userId         Int           @map("user_id")
+  currencyId     String        @map("currency_id")
+  userId         String        @map("user_id")
   createdAt      DateTime      @default(now()) @map("created_at")
   updatedAt      DateTime      @updatedAt @map("updated_at")
   currency       Currency      @relation(fields: [currencyId], references: [id])
@@ -86,10 +86,10 @@ model Asset {
 }
 
 model TransactionCategory {
-  id           Int             @id @default(autoincrement())
+  id           String          @id @default(uuid())
   name         String
   type         TransactionType
-  userId       Int?            @map("user_id")
+  userId       String?         @map("user_id")
   users        User?           @relation(fields: [userId], references: [id])
   transactions Transaction[]
 
@@ -97,12 +97,12 @@ model TransactionCategory {
 }
 
 model Transaction {
-  id          Int                 @id @default(autoincrement())
+  id          String              @id @default(uuid())
   date        DateTime
   description String
   amount      String
-  assetId     Int                 @map("asset_id")
-  categoryId  Int                 @map("category_id")
+  assetId     String              @map("asset_id")
+  categoryId  String              @map("category_id")
   createdAt   DateTime            @default(now()) @map("created_at")
   updatedAt   DateTime            @updatedAt @map("updated_at")
   asset       Asset               @relation(fields: [assetId], references: [id])
