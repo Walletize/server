@@ -114,4 +114,5 @@ model Transaction {
 enum TransactionType {
   expense
   income
+  update
 }
