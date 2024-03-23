@@ -115,4 +115,5 @@ enum TransactionType {
   expense
   income
   update
+  transfer
 }
