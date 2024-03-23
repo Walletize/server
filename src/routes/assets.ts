@@ -14,6 +14,9 @@ router.get('/', async (req, res) => {
                     equals: jwtUser.id,
                 },
             },
+            include: {
+                transactions: req.query.includeTransactions ? true : false
+            }
         });
 
         res.status(200).json({
