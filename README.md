@@ -1,37 +1,36 @@
 ![Walletize](hero-light.png)
 
-# Walletize Server
+# Walletize Server 💰
 
-The backend server for Walletize - the open-source personal finance app that's simple and modern.
+The backend server for Walletize - the open-source personal finance app that's simple and modern. ✨
 
-## About
+## About 📝
 
 This is the Express.js server that powers Walletize, a web application designed to help individuals efficiently manage their personal finances. It provides the API endpoints needed to track income, expenses, assets, and liabilities while enabling comprehensive insights into net worth and overall financial health.
 
 Key features:
 
-- Multi-currency support with automatic rate updates
-- User authentication and authorization
-- Shared financial accounts management
-- Asset tracking (savings, investments, real estate, etc.)
-- Transaction management
-- RESTful API endpoints
+- Multi-currency support with automatic rate updates 🌎
+- User authentication and authorization 🔒
+- Shared financial accounts management 👥
+- Asset tracking (savings, investments, real estate, etc.) 📊
+- Transaction management 💳
+- RESTful API endpoints 🔌
 
-## Prerequisites
+## Requirements 🛠️
 
-- PostgreSQL 14 or higher
-- Node.js 18 or higher
-- Docker (if using containerized deployment)
+- PostgreSQL 14 or higher 🐘
+- Docker installed and running 🐳
 
-## How to Use
+## How to Use 🚀
 
 There are two ways to use the Walletize server:
 
-### 1. Managed Service
+### 1. Managed Service ☁️
 
 Visit [www.walletize.app](https://www.walletize.app) to use the managed version. This is the easiest way to get started - simply create an account and start tracking your finances. The managed version includes automatic updates, backups, and technical support.
 
-### 2. Self-Hosting with Docker
+### 2. Self-Hosting with Docker 🏠
 
 To self-host the Walletize server:
 
@@ -78,6 +77,6 @@ To self-host the Walletize server:
      walletize-server
    ```
 
-6. The server will be running at `http://localhost:3100`
+6. The server will be running at `http://localhost:3100` ✅
 
 After setting up the server, you'll need to set up the web application by following the instructions in the [walletize](https://github.com/justinjap/walletize) repository.
