@@ -1,7 +1,6 @@
 import { PrismaAdapter } from '@lucia-auth/adapter-prisma';
 import { PrismaClient } from '@prisma/client';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import express from 'express';
 import { Lucia } from 'lucia';
 import cron from 'node-cron';
@@ -10,14 +9,13 @@ import { updateCurrencyRates } from './lib/utils.js';
 import routes from './routes/routes.js';
 
 const env = process.env.NODE_ENV || 'development';
-dotenv.config({ path: `.env.${env}` });
 
 export const prisma = new PrismaClient();
 const adapter = new PrismaAdapter(prisma.session, prisma.user);
 export const lucia = new Lucia(adapter, {
   sessionCookie: {
     attributes: {
-      secure: env === 'production',
+      secure: env === 'production' && process.env.USE_HTTPS === 'true',
     },
   },
   getUserAttributes: (attributes) => {
