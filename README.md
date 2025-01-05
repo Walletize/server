@@ -1,4 +1,4 @@
-![Walletize](hero-light.png)
+![Walletize](hero-light.avif)
 
 # Walletize Server
 
